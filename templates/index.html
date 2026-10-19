@@ -71,7 +71,20 @@
             border-radius: 50%;
             background: #b9ce83;
             box-shadow: 0 0 14px #b9ce83;
-        }
+        	}
+	.artist {
+		font-size: clamp(36px, 7vw, 60px);
+		font-weight: 700;
+		color: #ffffff;
+		margin-bottom: 12px;
+		}
+
+	.title {
+    		font-size: clamp(24px, 5vw, 42px);
+    		font-weight: 400;
+    		color: #b9ce83;
+    		line-height: 1.2;
+		}
     </style>
 </head>
 
@@ -79,9 +92,10 @@
     <main class="card">
         <p class="station">FM Olive · Now Playing</p>
 
-        <h1 id="song">
-            Consultando la radio...
-        </h1>
+ <div class="now-playing">
+    <div id="artist" class="artist">Consultando...</div>
+    <div id="title" class="title"></div>
+</div>
 
         <p class="status">
             <span class="live"></span>
@@ -93,8 +107,9 @@
 
     <script>
         async function updateNowPlaying() {
-            const song = document.getElementById("song");
-            const status = document.getElementById("update-status");
+            	const artist = document.getElementById("artist");
+		const title = document.getElementById("title");
+            	const status = document.getElementById("update-status");
 
             try {
                 const response = await fetch(
@@ -104,7 +119,15 @@
 
                 const data = await response.json();
 
-                song.textContent = data.title;
+                const parts = data.title.split(" - ");
+
+		if (parts.length >= 2) {
+    		artist.textContent = parts[0].trim();
+    		title.textContent = parts.slice(1).join(" - ").trim();
+		} else {
+    		artist.textContent = data.title;
+    		title.textContent = "";
+		};
 
                 status.textContent =
                     "Actualizado " +
